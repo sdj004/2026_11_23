@@ -11,6 +11,7 @@ from ball import Ball
 
 import game_framework
 
+
 # 달리기 속력을 시속 km에서 초속 m, 다시 초당 픽셀로 변환한다.
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
@@ -192,7 +193,11 @@ class Boy:
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def handle_collision(self, group, other):
+        global game_framework
+        
         if group == "boy:ball":
             self.ball_count += 1
         if group == "boy:zombie":
-            print("zombie touch human")
+            print("touch zombie")
+            game_framework.quit()
+            
