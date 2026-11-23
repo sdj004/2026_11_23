@@ -48,6 +48,10 @@ def init():
         #game_world.add_collision_pair("boy:ball", boy, ball) #이렇게하면 boy가 중복됨
         game_world.add_collision_pair("boy:ball", None, ball) #boy가 중복되니까 이렇게 작성
 
+    for zombie in zombies:
+        game_world.add_collision_pair("zombie:ball", zombie, ball)
+        
+
 def pause():
     boy.pause()
 
