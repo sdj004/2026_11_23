@@ -46,8 +46,8 @@ class Idle:
         row = 300 if boy.face_dir == 1 else 200
         boy.image.clip_draw(boy.frame * 100, row, 100, 100, boy.x, boy.y)
 
-    def space(self, boy):
-        boy.fire_ball()
+    def space(self, boy, zombies):
+        boy.fire_ball(zombies)
 
     def move(self, boy):
         boy.start_run()
@@ -89,8 +89,8 @@ class Run:
         # 그림을 선택할 때만 소수 부분을 버린다.
         boy.image.clip_draw(int(boy.frame) * 100, row, 100, 100, boy.x, boy.y)
 
-    def space(self, boy):
-        boy.fire_ball()
+    def space(self, boy, zombies):
+        boy.fire_ball(zombies)
 
     def move(self, boy):
         pass
@@ -137,7 +137,7 @@ class Boy:
     def on_enter_RUN(self):
         self.states['RUN'].enter(self)
 
-    def fire_ball(self):
+    def fire_ball(self, zombies):
         if self.item is None or self.ball_count <= 0:
             return
         self.ball_count -= 1
@@ -146,7 +146,9 @@ class Boy:
         game_world.add_oject(ball)
         game_world.add_collision_pair('grass:ball', None, ball)
         game_world.add_collision_pair('boy:ball', None, ball)
-        game_world.add_collision_pair('ball:zombie', None, ball)
+
+        for zombie in zombies:
+            game_world.add_collision_pair("zombie:ball", zombie, ball)
 
     def pause(self):
         self.pressed_keys.clear()
@@ -154,9 +156,9 @@ class Boy:
             self.dir = 0
             self.stop_run()
 
-    def handle_event(self, event):
+    def handle_event(self, event, zombies):
         if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE:
-            self.states[self.state].space(self)
+            self.states[self.state].space(self, zombies)
             return
 
         if (event.type not in (SDL_KEYDOWN, SDL_KEYUP) or

@@ -12,7 +12,7 @@ boy = None
 
 
 def handle_events():
-
+    global zombies
 
     event_list = get_events()
     for event in event_list:
@@ -22,7 +22,7 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         else:
-            boy.handle_event(event)
+            boy.handle_event(event, zombies)
 
 
 def init():
@@ -39,7 +39,7 @@ def init():
 
     balls = [Ball(random.randint(0, 1700), 60, 0) for i in range(30)]
     game_world.add_objects(balls, 1)
-
+    global zombies
     zombies = [Zombie() for _ in range(4)]
     game_world.add_objects(zombies, 1)
 
@@ -48,9 +48,8 @@ def init():
         #game_world.add_collision_pair("boy:ball", boy, ball) #이렇게하면 boy가 중복됨
         game_world.add_collision_pair("boy:ball", None, ball) #boy가 중복되니까 이렇게 작성
 
-    for zombie in zombies:
-        game_world.add_collision_pair("zombie:ball", zombie, ball)
-        
+    
+
 
 def pause():
     boy.pause()
